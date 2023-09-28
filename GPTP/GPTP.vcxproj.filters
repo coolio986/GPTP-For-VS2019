@@ -1,0 +1,902 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files\Subfolders">
+      <UniqueIdentifier>{5cdea93f-396d-49ba-9b7e-400c24df0165}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Header Files\Subfolders">
+      <UniqueIdentifier>{a40ef2ec-b55a-44d8-a53f-64b4f0a60a20}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="hooks\orders\base_orders\attack_orders.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\orders\base_orders\attack_orders_inject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\interface\btns_cond.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\interface\btns_cond_inject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\orders\building_making\building_morph.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\orders\building_making\building_morph_inject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\orders\building_making\building_protoss.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\orders\building_making\building_protoss_inject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\orders\building_making\building_terran.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\orders\building_making\building_terran_inject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\recv_commands\burrow_tech.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\recv_commands\burrow_tech_inject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\interface\buttonsets.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\interface\buttonsets_inject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\orders\spells\cast_order.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\orders\spells\cast_order_inject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\recv_commands\CMDRECV_Cancel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\recv_commands\CMDRECV_Cancel_inject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\recv_commands\CMDRECV_MergeArchon.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\recv_commands\CMDRECV_MergeArchon_inject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\recv_commands\CMDRECV_Morph.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\recv_commands\CMDRECV_Morph_inject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\recv_commands\CMDRECV_SiegeTank.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\recv_commands\CMDRECV_SiegeTank_inject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\recv_commands\CMDRECV_Stop.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\recv_commands\CMDRECV_Stop_inject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="configure.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\create_init_units.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\create_init_units_inject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\orders\base_orders\die_order.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\orders\base_orders\die_order_inject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\orders\enter_nydus.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\orders\enter_nydus_inject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\orders\spells\feedback_spell.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\orders\spells\feedback_spell_inject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\give_unit.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\give_unit_inject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\orders\spells\hallucination_spell.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\orders\spells\hallucination_spell_inject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hook_tools.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\orders\infestation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\orders\infestation_inject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="initialize.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\orders\larva_creep_spawn.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\orders\larva_creep_spawn_inject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\orders\liftland.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\orders\liftland_inject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\orders\load_unload_orders.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\orders\load_unload_orders_inject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\load_unload_proc.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\load_unload_proc_inject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="logger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\orders\building_making\make_nydus_exit.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\orders\building_making\make_nydus_exit_inject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\orders\medic_orders.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\orders\medic_orders_inject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\orders\merge_units.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\orders\merge_units_inject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\orders\spells\nuke_orders.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\orders\spells\nuke_orders_inject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SCBW\structures\Player.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Plugin.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="plugin_main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\orders\spells\recall_spell.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\orders\spells\recall_spell_inject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\recv_commands\receive_command.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\recv_commands\receive_command_inject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\orders\research_upgrade_orders.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\orders\research_upgrade_orders_inject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\interface\select_larva.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\interface\select_larva_inject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\interface\selection.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\interface\selection_inject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\orders\siege_transform.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\orders\siege_transform_inject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\orders\base_orders\stopholdpos_orders.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\orders\base_orders\stopholdpos_orders_inject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\recv_commands\train_cmd_receive.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\recv_commands\train_cmd_receive_inject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\orders\unit_making\unit_morph.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\orders\unit_making\unit_morph_inject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\orders\unit_making\unit_train.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\orders\unit_making\unit_train_inject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\interface\wireframe.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\interface\wireframe_inject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\weapons\wpnspellhit.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\weapons\wpnspellhit_inject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\ai_common.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="SCBW\api.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\apply_upgrade_flags.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\apply_upgrade_flags_inject.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\unit_stats\armor_bonus.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\unit_stats\armor_bonus_inject.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\attack_priority.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\attack_priority_inject.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\Bitmap.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="unhooked\building_morph.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="unhooked\building_morph_inject.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\bunker_hooks.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\bunker_hooks_inject.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="SCBW\structures\CImage.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\cloak_nearby_units.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\cloak_nearby_units_inject.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\cloak_tech.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\cloak_tech_inject.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="SCBW\structures\CSprite.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="SCBW\structures\CUnit.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\spells\dark_swarm.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\spells\defensive_matrix.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\detector.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\detector_inject.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\spells\disruption_web.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\draw_hook.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\spells\emp_shockwave.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\spells\ensnare.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\spells\feedback.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\Font.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\game_hooks.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\game_hooks_inject.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\graphics.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\graphics_errors.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\spells\hallucination.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\harvest.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\harvest_inject.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\spells\irradiate.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\spells\launch_nuke.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\spells\lockdown.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\spells\maelstrom.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\unit_stats\max_energy.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\unit_stats\max_energy_inject.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\spells\mind_control.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\spells\optical_flare.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\spells\parasite.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\spells\plague.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\psi_field.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\psi_field_inject.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\psi_field_util.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\spells\psi_storm.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\rally_point.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\rally_point_inject.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\spells\recall.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\recharge_shields.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\recharge_shields_inject.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\spells\restoration.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\Shape.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\unit_stats\sight_range.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\unit_stats\sight_range_inject.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\spells\spawn_broodlings.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\spellcasting.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\spellcasting_inject.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\spider_mine.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\spider_mine_inject.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\spells\stasis_field.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\stim_packs.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\stim_packs_inject.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\tech_target_check.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\tech_target_check_inject.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\transfer_tech_upgrades.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\transfer_tech_upgrades_inject.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\unit_destructor_special.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="unhooked\unit_morph.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="unhooked\unit_morph_inject.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\unit_speed.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\unit_speed_inject.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="SCBW\UnitFinder.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\update_status_effects.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\update_status_effects_inject.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\update_unit_state.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\update_unit_state_inject.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\interface\weapon_armor_tooltip.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\interface\weapon_armor_tooltip_inject.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\weapons\weapon_cooldown.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\weapons\weapon_cooldown_inject.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\weapons\weapon_damage.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\weapons\weapon_damage_inject.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\weapons\weapon_fire.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\weapons\weapon_fire_inject.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\unit_stats\weapon_range.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks\unit_stats\weapon_range_inject.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\spells\yamato_gun.cpp">
+      <Filter>Source Files\Subfolders</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="hooks\orders\spells\recall_spell.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\orders\base_orders\attack_orders.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\interface\btns_cond.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\orders\building_making\building_morph.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\orders\building_making\building_protoss.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\orders\building_making\building_terran.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\recv_commands\burrow_tech.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\interface\buttonsets.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\orders\spells\cast_order.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\recv_commands\CMDRECV_Cancel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\recv_commands\CMDRECV_MergeArchon.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\recv_commands\CMDRECV_Morph.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\recv_commands\CMDRECV_SiegeTank.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\recv_commands\CMDRECV_Stop.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\create_init_units.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="definitions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\orders\base_orders\die_order.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\orders\enter_nydus.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\orders\spells\feedback_spell.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SCBW\enumerations\FlingyId.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\give_unit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\orders\spells\hallucination_spell.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="hook_tools.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SCBW\enumerations\IconId.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\orders\infestation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\orders\larva_creep_spawn.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\orders\liftland.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\orders\load_unload_orders.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\load_unload_proc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="logger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\orders\building_making\make_nydus_exit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\orders\medic_orders.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\orders\merge_units.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MPQDraftPlugin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\orders\spells\nuke_orders.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SCBW\structures\Player.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Plugin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\recv_commands\receive_command.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\orders\research_upgrade_orders.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\interface\select_larva.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\interface\selection.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\orders\siege_transform.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SCBW\enumerations\SoundId.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SCBW\enumerations\SpriteId.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\orders\base_orders\stopholdpos_orders.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\recv_commands\train_cmd_receive.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\orders\unit_making\unit_morph.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\orders\unit_making\unit_train.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\interface\wireframe.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\weapons\wpnspellhit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\ai_common.h">
+      <Filter>Header Files\Subfolders</Filter>
+    </ClInclude>
+    <ClInclude Include="SCBW\api.h">
+      <Filter>Header Files\Subfolders</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\apply_upgrade_flags.h">
+      <Filter>Header Files\Subfolders</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\unit_stats\armor_bonus.h">
+      <Filter>Header Files\Subfolders</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\attack_priority.h">
+      <Filter>Header Files\Subfolders</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\Bitmap.h">
+      <Filter>Header Files\Subfolders</Filter>
+    </ClInclude>
+    <ClInclude Include="unhooked\building_morph.h">
+      <Filter>Header Files\Subfolders</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\bunker_hooks.h">
+      <Filter>Header Files\Subfolders</Filter>
+    </ClInclude>
+    <ClInclude Include="SCBW\structures\CBullet.h">
+      <Filter>Header Files\Subfolders</Filter>
+    </ClInclude>
+    <ClInclude Include="SCBW\structures\CImage.h">
+      <Filter>Header Files\Subfolders</Filter>
+    </ClInclude>
+    <ClInclude Include="SCBW\structures\CList.h">
+      <Filter>Header Files\Subfolders</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\cloak_nearby_units.h">
+      <Filter>Header Files\Subfolders</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\cloak_tech.h">
+      <Filter>Header Files\Subfolders</Filter>
+    </ClInclude>
+    <ClInclude Include="SCBW\structures\common.h">
+      <Filter>Header Files\Subfolders</Filter>
+    </ClInclude>
+    <ClInclude Include="SCBW\structures\COrder.h">
+      <Filter>Header Files\Subfolders</Filter>
+    </ClInclude>
+    <ClInclude Include="SCBW\structures\CSprite.h">
+      <Filter>Header Files\Subfolders</Filter>
+    </ClInclude>
+    <ClInclude Include="SCBW\structures\CUnit.h">
+      <Filter>Header Files\Subfolders</Filter>
+    </ClInclude>
+    <ClInclude Include="SCBW\structures\CUnitLayout.h">
+      <Filter>Header Files\Subfolders</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\spells\defensive_matrix.h">
+      <Filter>Header Files\Subfolders</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\detector.h">
+      <Filter>Header Files\Subfolders</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\draw_hook.h">
+      <Filter>Header Files\Subfolders</Filter>
+    </ClInclude>
+    <ClInclude Include="SCBW\enumerations.h">
+      <Filter>Header Files\Subfolders</Filter>
+    </ClInclude>
+    <ClInclude Include="SCBW\ExtendSightLimit.h">
+      <Filter>Header Files\Subfolders</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\Font.h">
+      <Filter>Header Files\Subfolders</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\game_hooks.h">
+      <Filter>Header Files\Subfolders</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\graphics.h">
+      <Filter>Header Files\Subfolders</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\graphics_errors.h">
+      <Filter>Header Files\Subfolders</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\graphics_misc.h">
+      <Filter>Header Files\Subfolders</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\harvest.h">
+      <Filter>Header Files\Subfolders</Filter>
+    </ClInclude>
+    <ClInclude Include="SCBW\enumerations\ImageId.h">
+      <Filter>Header Files\Subfolders</Filter>
+    </ClInclude>
+    <ClInclude Include="SCBW\structures\Layer.h">
+      <Filter>Header Files\Subfolders</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\unit_stats\max_energy.h">
+      <Filter>Header Files\Subfolders</Filter>
+    </ClInclude>
+    <ClInclude Include="SCBW\enumerations\OrderId.h">
+      <Filter>Header Files\Subfolders</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\psi_field.h">
+      <Filter>Header Files\Subfolders</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\rally_point.h">
+      <Filter>Header Files\Subfolders</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\recharge_shields.h">
+      <Filter>Header Files\Subfolders</Filter>
+    </ClInclude>
+    <ClInclude Include="SCBW\scbwdata.h">
+      <Filter>Header Files\Subfolders</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\Shape.h">
+      <Filter>Header Files\Subfolders</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\unit_stats\sight_range.h">
+      <Filter>Header Files\Subfolders</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\spellcasting.h">
+      <Filter>Header Files\Subfolders</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\spells\spells.h">
+      <Filter>Header Files\Subfolders</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\spider_mine.h">
+      <Filter>Header Files\Subfolders</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\stim_packs.h">
+      <Filter>Header Files\Subfolders</Filter>
+    </ClInclude>
+    <ClInclude Include="SCBW\structures.h">
+      <Filter>Header Files\Subfolders</Filter>
+    </ClInclude>
+    <ClInclude Include="SCBW\structures\Target.h">
+      <Filter>Header Files\Subfolders</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\tech_target_check.h">
+      <Filter>Header Files\Subfolders</Filter>
+    </ClInclude>
+    <ClInclude Include="SCBW\enumerations\TechId.h">
+      <Filter>Header Files\Subfolders</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\transfer_tech_upgrades.h">
+      <Filter>Header Files\Subfolders</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\unit_destructor_special.h">
+      <Filter>Header Files\Subfolders</Filter>
+    </ClInclude>
+    <ClInclude Include="unhooked\unit_morph.h">
+      <Filter>Header Files\Subfolders</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\unit_speed.h">
+      <Filter>Header Files\Subfolders</Filter>
+    </ClInclude>
+    <ClInclude Include="SCBW\UnitFinder.h">
+      <Filter>Header Files\Subfolders</Filter>
+    </ClInclude>
+    <ClInclude Include="SCBW\enumerations\UnitId.h">
+      <Filter>Header Files\Subfolders</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\update_status_effects.h">
+      <Filter>Header Files\Subfolders</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\update_unit_state.h">
+      <Filter>Header Files\Subfolders</Filter>
+    </ClInclude>
+    <ClInclude Include="SCBW\enumerations\UpgradeId.h">
+      <Filter>Header Files\Subfolders</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\interface\weapon_armor_tooltip.h">
+      <Filter>Header Files\Subfolders</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\weapons\weapon_cooldown.h">
+      <Filter>Header Files\Subfolders</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\weapons\weapon_damage.h">
+      <Filter>Header Files\Subfolders</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\weapons\weapon_fire.h">
+      <Filter>Header Files\Subfolders</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks\unit_stats\weapon_range.h">
+      <Filter>Header Files\Subfolders</Filter>
+    </ClInclude>
+    <ClInclude Include="SCBW\enumerations\WeaponId.h">
+      <Filter>Header Files\Subfolders</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

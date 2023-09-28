@@ -1,0 +1,186 @@
+Version 4.026
+-Fixed some minor (no effects on testing) mistakes in hooks/interface/selection_inject.cpp
+-added the select_larva hooks
+-Minor cosmetics changes
+
+---------------------------------------
+
+Version 4.025
+-Fixed another mistake in hooks/orders/infestation.cpp (caused Issue #30)
+-Minor changes in helper functions for the same hook
+
+---------------------------------------
+
+Version 4.024
+-Fixed a major mistake in hooks/orders/infestation.cpp (caused Issue #29)
+-Various minor fix in hooks/orders/infestation.cpp
+
+---------------------------------------
+
+Version 4.023
+
+Fixed an error in CUnit.cpp reduceDefensiveMatrixHp function causing
+defensive matrix overlay to never disappear
+
+---------------------------------------
+
+Version 4.022
+Fixed lots of error in Recharge Shields hook, making it working properly
+
+---------------------------------------
+
+Version 4.021
+-minor change in hooks\orders\building_making\building_terran_inject.cpp
+-improvement in hooks\orders\building_making\make_nydus_exit.cpp (identification of code)
+-minor change in hooks\recv_commands\burrow_tech.cpp
+-fixed the broken Cloak Nearby Units hook
+-added the CMDRECV_Stop hooks
+-added the CMDRECV_Cancel hooks
+
+---------------------------------------
+
+Version 4.020
+-fix mistakes that caused a crash in hooks/orders/unit_making/unit_train.cpp
+-removed a comment in hooks/recv_commands/train_cmd_receive.cpp
+-improvements and fixes in hooks/create_init_units.cpp
+-added CMDRECV_MergeArchon hook
+-added CMDRECV_Morph hook
+
+---------------------------------------
+
+Version 4.019
+-minor fixes in train_cmd_receive.cpp
+-moved burrowed tech hooks into recv_commands folder
+-added CMDRECV_SiegeTank hooks
+-disabled cloak nearby units hook (broken)
+
+---------------------------------------
+
+Version 4.018
+
+-added the recv_commands folder
+-moved receive command hook to the new folder
+-added new Train Command Receive hook
+
+---------------------------------------
+
+Version 4.017
+
+-identified some unknown content in create init units hook
+-added the Give Unit hook
+
+---------------------------------------
+
+Version 4.016
+
+-fix an error in burrow tech hook.
+-removed useless content in Load/Unload proc.
+-added startPositions to scbwdata.h.
+-add Create Initial Units hooks.
+
+---------------------------------------
+
+Version 4.015
+
+-add new Receive Command hook
+
+---------------------------------------
+
+Version 4.014
+
+-renamed a function based on effect in attack orders hook.
+-fix a wrong function use in Feedback spell hook.
+-fix an error in Weapon/Spell hit hook.
+-fix a comment in burrow tech injector file.
+-fixes in function MoveScreenToUnit of api.cpp.
+-unlock an entry in scbwdata.h for a future function.
+
+---------------------------------------
+
+Version 4.013
+-resync files of Weapon/Spell Hit hook with offline version (missing bugfix)
+
+---------------------------------------
+
+Version 4.012
+-fix in Medic Orders hook
+
+---------------------------------------
+
+Version 4.011
+-minor fix in hallucination spell hook
+-major fixing in burrow tech hooks (weren't working at all)
+-add Buttons Conditions hooks
+
+----------------------------------------
+
+Version 4.010
+-fix a mistake in hallucination spell hook
+-fix energy cost in recall spell hook
+
+----------------------------------------
+
+Version 4.009
+-fix a mistake in Consume hit in wpnspellhit.cpp
+
+----------------------------------------
+
+Version 4.008
+-add Hallucination spell hook
+-add Feedback spell hook
+-unit_train.cpp: added a missing code part, may fix a bug
+-wpnspellhit.cpp: fix an error that could crash the game when hallucinated units attack
+-update_unit_state.cpp: removed useless helper
+-minor fixes
+
+----------------------------------------
+
+Version 4.007
+-Add performAnotherOrder() to CUnit functions
+-Add Medic hooks
+-minor fixes
+
+----------------------------------------
+
+Version 4.006
+-adding Burrow tech hooks
+-adding Research/Upgrade orders hooks
+-removed some useless include
+
+----------------------------------------
+
+Version 4.005
+adding Nuke Orders hooks
+
+----------------------------------------
+
+Version 4.004
+-adding Load/Unload orders hooks
+-adding Load/Unload proc hooks
+
+----------------------------------------
+
+Version 4.003:
+adding Unit_train hooks
+
+----------------------------------------
+
+
+Version 4.002:
+
+-adding Building_Protoss hooks
+-fix a param type in Building_Terran helper function
+-modify a more identified member of CImage (2 u8 to 1 u16)
+
+----------------------------------------
+
+Version 4.001:
+
+-fix a bug where some const CUnit* survived their removal
+-adding Building_Terran hooks
+
+----------------------------------------
+
+Version 4.000:
+
+Adding Die_Order hook
