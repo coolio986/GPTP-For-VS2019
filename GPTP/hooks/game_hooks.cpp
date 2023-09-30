@@ -12,7 +12,8 @@
 #include <logger.h>
 #define WRITE_TO_LOG(x) GPTP::logger<<x<<std::endl
 
-namespace {
+namespace
+{
 	void replaceUnitWithType(CUnit* unit, u16 newUnitId);
 	void replaceSpriteImages(CSprite* sprite, u16 imageId, u8 imageDirection);
 	void setImageDirection(CImage* image, s8 direction);
@@ -24,13 +25,15 @@ namespace {
 	inline void manageUnitStatusFlags(CUnit* unit, u32 flag, bool status);
 }
 
-namespace buildingMorph {
+namespace buildingMorph
+{
 	void morphBuildingInto(CUnit* unit, u16 newUnitId, IscriptAnimation::Enum animation, bool canBeCanceled);
 	void manageMorphing(CUnit* unit, u16 seconds);
 	void runBuildingMorph(CUnit* unit);
 }
 
-namespace plugins {
+namespace plugins
+{
 	CUnit* nearestTemplarMergePartner(CUnit* unit);
 	bool chargeTargetInRange(const CUnit* zealot);
 	bool isInHarvestState(const CUnit* worker);
@@ -56,12 +59,13 @@ namespace plugins {
 	void runReactorBehaviour(CUnit* unit);
 	void runBurrowedMovement(CUnit* unit);
 	void showWorkerCount(CUnit* selUnit);
-	void showProgressBar(CUnit* unit, u16 totalBuildTime);
+	void showProgressBar(CUnit* unit, u16 remainingBuildTime, u16 totalBuildTime);
 }
 
 
 
-namespace warpgateMechanic {
+namespace warpgateMechanic
+{
 	void manageWarpgateFlags(CUnit* warpgate);
 	void cleanWarpgate(CUnit* warpgate);
 	void setWarpUnit(CUnit* warpUnit);
@@ -69,7 +73,8 @@ namespace warpgateMechanic {
 	void runWarpgate(CUnit* warpgate);
 }
 
-namespace buildingPreview {
+namespace buildingPreview
+{
 	void saveUnitAsParent(CUnit* parent, CUnit* unit);
 	CUnit* getPrevParent(CUnit* preview);
 	u8 getPrevPlayerId(CUnit* preview);
@@ -87,7 +92,8 @@ namespace buildingPreview {
 	void manageBuildingPreview(CUnit* unit);
 }
 
-namespace smartCasting {
+namespace smartCasting
+{
 	//Here we store the last order for each unit,
 	//to do not mess with the members of the CUnit structure
 	static COrder lastOrderArray[UNIT_ARRAY_LENGTH + 1];
@@ -160,15 +166,18 @@ namespace smartCasting {
 } //namespace smartCasting
 
 
-namespace hooks {
+namespace hooks
+{
 
-	
+
 
 
 	/// This hook is called every frame; most of your plugin's logic goes here.
-	bool nextFrame() {
+	bool nextFrame()
+	{
 
-		if (!scbw::isGamePaused()) { //If the game is not paused
+		if (!scbw::isGamePaused())
+		{ //If the game is not paused
 
 			scbw::setInGameLoopState(true); //Needed for scbw::random() to work
 			graphics::resetAllGraphics();
@@ -180,13 +189,15 @@ namespace hooks {
 			u32 idleWorkerCount = 0;
 
 			//This block is executed once every game.
-			if (*elapsedTimeFrames == 0) {
+			if (*elapsedTimeFrames == 0)
+			{
 				plugins::runFirstFrameBehaviour();
 
 			}
 
 			//Loop through all visible units in the game - start
-			for (CUnit* unit = *firstVisibleUnit; unit; unit = unit->link.next) {
+			for (CUnit* unit = *firstVisibleUnit; unit; unit = unit->link.next)
+			{
 				plugins::manageWorkerCollision(unit);
 				//buildingPreview::manageBuildingPreview(unit);
 
@@ -194,31 +205,62 @@ namespace hooks {
 				plugins::showWorkerCount(unit);
 
 				//btech - add progress bar for units being built
-				if (unit->playerId == *LOCAL_NATION_ID) {
-					if (unit && unit->remainingBuildTime > 0 && unit->buildQueue && unit->buildQueue[unit->buildQueueSlot] == unit->orderUnitType) {
-						plugins::showProgressBar(unit, units_dat::TimeCost[unit->id]);
+				if (unit->playerId == *LOCAL_NATION_ID)
+				{
+					if (unit->id && UnitId::ProtossFleetBeacon)
+					{
+						u16 test = 0;
+					}
+					u32 baseProp = units_dat::BaseProperty[unit->id];
+
+					if (unit->status & UnitStatus::GroundedBuilding
+						&& unit->status & UnitStatus::Completed)
+					{
+						switch (unit->mainOrderId)
+						{
+						case OrderId::Upgrade:
+							plugins::showProgressBar(unit, unit->building.upgradeResearchTime, upgrades_dat::TimeCostBase[unit->building.upgradeType]);
+						case OrderId::ResearchTech:
+							plugins::showProgressBar(unit, unit->building.upgradeResearchTime, techdata_dat::TimeCost[unit->building.techType]);
+							break;
+						default: break;
+						}
+
+					}
+
+					
+					if (unit && unit->remainingBuildTime > 0
+						&& unit->buildQueue
+						&& unit->buildQueue[unit->buildQueueSlot] == unit->orderUnitType
+						&& !(unit->status & UnitStatus::Completed))
+					{
+						plugins::showProgressBar(unit, unit->remainingBuildTime, units_dat::TimeCost[unit->id]);
 					}
 					else
-						if (unit->buildQueue && unit->buildQueue[unit->buildQueueSlot] != unit->orderUnitType && unit->currentBuildUnit) {
-							plugins::showProgressBar(unit->currentBuildUnit, units_dat::TimeCost[unit->currentBuildUnit->id]);
+						if (unit->buildQueue && unit->buildQueue[unit->buildQueueSlot] != unit->orderUnitType && unit->currentBuildUnit)
+						{
+							plugins::showProgressBar(unit->currentBuildUnit, unit->currentBuildUnit->remainingBuildTime, units_dat::TimeCost[unit->currentBuildUnit->id]);
 						}
 						else
-							if (unit->buildQueue && unit->buildQueue[unit->buildQueueSlot] != unit->orderUnitType && unit->remainingBuildTime > 0) {
-								plugins::showProgressBar(unit, units_dat::TimeCost[unit->buildQueue[unit->buildQueueSlot]]);
+							if (unit->buildQueue && unit->buildQueue[unit->buildQueueSlot] != unit->orderUnitType && unit->remainingBuildTime > 0)
+							{
+								plugins::showProgressBar(unit, unit->remainingBuildTime, units_dat::TimeCost[unit->buildQueue[unit->buildQueueSlot]]);
 							}
 				}
 
 				//KYSXD Idle worker count
 				if ((unit->playerId == *LOCAL_NATION_ID || scbw::isInReplay())
 					&& units_dat::BaseProperty[unit->id] & UnitProperty::Worker
-					&& unit->mainOrderId == OrderId::PlayerGuard) {
+					&& unit->mainOrderId == OrderId::PlayerGuard)
+				{
 					++idleWorkerCount;
 				}
 
 				//KYSXD - reset warpgates when build
 				if ((unit->id == UnitId::Special_WarpGate
 					|| unit->id == UnitId::ProtossGateway)
-					&& unit->mainOrderId == OrderId::BuildSelf2) {
+					&& unit->mainOrderId == OrderId::BuildSelf2)
+				{
 					unit->previousUnitType = UnitId::None;
 				}
 
@@ -244,15 +286,19 @@ namespace hooks {
 			} //Loop through all visible units in the game - end
 
 			//KYSXD - Selection plugins
-			for (int i = 0; i < *clientSelectionCount; ++i) {
+			for (int i = 0; i < *clientSelectionCount; ++i)
+			{
 				CUnit* selUnit = clientSelectionGroup->unit[i];
 				plugins::showUnitGraphicHelpers(selUnit);
 
 				//KYSXD Twilight Archon
-				if (selUnit->id == UnitId::ProtossDarkTemplar || selUnit->id == UnitId::ProtossHighTemplar) {
-					if (selUnit->mainOrderId == OrderId::ReaverStop) {
+				if (selUnit->id == UnitId::ProtossDarkTemplar || selUnit->id == UnitId::ProtossHighTemplar)
+				{
+					if (selUnit->mainOrderId == OrderId::ReaverStop)
+					{
 						CUnit* templarPartner = plugins::nearestTemplarMergePartner(selUnit);
-						if (templarPartner != NULL) {
+						if (templarPartner != NULL)
+						{
 							selUnit->orderTo(OrderId::WarpingDarkArchon, templarPartner);
 							templarPartner->orderTo(OrderId::WarpingDarkArchon, selUnit);
 
@@ -266,7 +312,8 @@ namespace hooks {
 			}
 
 			//KYSXD Print info on screen
-			if (idleWorkerCount != 0) {
+			if (idleWorkerCount != 0)
+			{
 				char idleworkers[64];
 				sprintf_s(idleworkers, "Idle Workers: %d", idleWorkerCount);
 				graphics::drawText(5, 5, idleworkers, graphics::FONT_MEDIUM, graphics::ON_SCREEN);
@@ -279,21 +326,25 @@ namespace hooks {
 	}
 
 
-	
 
-	bool gameOn() {
+
+	bool gameOn()
+	{
 		return true;
 	}
 
-	bool gameEnd() {
+	bool gameEnd()
+	{
 		return true;
 	}
 
 } //hooks
 
-namespace {
+namespace
+{
 	const u32 Func_ReplaceUnitWithType = 0x0049FED0;
-	void replaceUnitWithType(CUnit* unit, u16 newUnitId) {
+	void replaceUnitWithType(CUnit* unit, u16 newUnitId)
+	{
 		u32 newUnitId_ = newUnitId;
 
 		__asm {
@@ -307,7 +358,8 @@ namespace {
 	}
 
 	const u32 Func_ReplaceSpriteImages = 0x00499BB0;
-	void replaceSpriteImages(CSprite* sprite, u16 imageId, u8 imageDirection) {
+	void replaceSpriteImages(CSprite* sprite, u16 imageId, u8 imageDirection)
+	{
 		u32 imageId_ = imageId, imageDirection_ = imageDirection;
 		__asm {
 			PUSHAD
@@ -320,7 +372,8 @@ namespace {
 	}
 
 	const u32 Func_SetImageDirection = 0x004D5F80;
-	void setImageDirection(CImage* image, s8 direction) {
+	void setImageDirection(CImage* image, s8 direction)
+	{
 		u32 direction_ = direction;
 
 		__asm {
@@ -334,7 +387,8 @@ namespace {
 	}
 
 	const u32 Func_unitHasPathToDestOnGround = 0x0042FA00;
-	bool unitHasPathToDestOnGround(const CUnit* unit, int x, int y) {
+	bool unitHasPathToDestOnGround(const CUnit* unit, int x, int y)
+	{
 		static Bool32 bPreResult;
 
 		__asm {
@@ -351,14 +405,16 @@ namespace {
 
 	}
 
-	bool unitHasPathToUnitOnGround(const CUnit* unit, CUnit* target) {
+	bool unitHasPathToUnitOnGround(const CUnit* unit, CUnit* target)
+	{
 		if (target != NULL)
 			return unitHasPathToDestOnGround(unit, target->getX(), target->getY());
 		return false;
 	}
 
 	const u32 Func_removeOrderFromUnitQueue = 0x004742D0;
-	void removeOrderFromUnitQueue(CUnit* unit) {
+	void removeOrderFromUnitQueue(CUnit* unit)
+	{
 
 		static COrder* orderQueueHead = unit->orderQueueHead;
 
@@ -372,16 +428,20 @@ namespace {
 
 	}
 
-	inline void manageUnitStatusFlags(CUnit* unit, u32 flag, bool status) {
-		if (status) {
+	inline void manageUnitStatusFlags(CUnit* unit, u32 flag, bool status)
+	{
+		if (status)
+		{
 			unit->status |= flag;
 		}
 		else unit->status &= ~(flag);
 	}
 } //unnamed namespace
 
-namespace buildingMorph {
-	void morphBuildingInto(CUnit* unit, u16 newUnitId, IscriptAnimation::Enum animation, bool canBeCanceled) {
+namespace buildingMorph
+{
+	void morphBuildingInto(CUnit* unit, u16 newUnitId, IscriptAnimation::Enum animation, bool canBeCanceled)
+	{
 		u16 timeCost = units_dat::TimeCost[newUnitId];
 
 		unit->previousUnitType = unit->id;
@@ -400,20 +460,24 @@ namespace buildingMorph {
 
 	}
 
-	void manageMorphing(CUnit* unit, u16 seconds = 0) {
+	void manageMorphing(CUnit* unit, u16 seconds = 0)
+	{
 		//Morphing flag
 		if (unit->_unused_0x106 == 1
-			&& !unit->isFrozen()) {
+			&& !unit->isFrozen())
+		{
 			u16 timeCost = units_dat::TimeCost[unit->id];
 			u16 timeGain;
-			if (seconds && (timeCost / 15) > seconds) {
+			if (seconds && (timeCost / 15) > seconds)
+			{
 				timeGain = timeCost / (seconds * 15);
 			}
 			else timeGain = 1;
 
 			unit->remainingBuildTime -= std::min(unit->remainingBuildTime, timeGain);
 			if (!unit->remainingBuildTime
-				&& !(unit->status & UnitStatus::NoBrkCodeStart)) {
+				&& !(unit->status & UnitStatus::NoBrkCodeStart))
+			{
 
 				s32 shieldHolder = unit->shields;
 
@@ -427,12 +491,15 @@ namespace buildingMorph {
 		}
 	}
 
-	void runBuildingMorph(CUnit* unit) {
+	void runBuildingMorph(CUnit* unit)
+	{
 		//Usage exaplme: Gateway/WarpGate morph
 
 		if (unit->id == UnitId::ProtossGateway
-			|| unit->id == UnitId::Special_WarpGate) {
-			if (unit->mainOrderId == OrderId::ReaverStop) {
+			|| unit->id == UnitId::Special_WarpGate)
+		{
+			if (unit->mainOrderId == OrderId::ReaverStop)
+			{
 				u16 morphVariant = UnitId::ProtossGateway + UnitId::Special_WarpGate - unit->id;
 				morphBuildingInto(unit, morphVariant, IscriptAnimation::Unused1, false);
 				unit->rally.unit = unit;
@@ -443,10 +510,12 @@ namespace buildingMorph {
 		//Set unit id
 		else if (unit->id == UnitId::TerranCommandCenter
 			|| unit->id == UnitId::Special_IonCannon
-			|| unit->id == UnitId::TerranComsatStation) {
+			|| unit->id == UnitId::TerranComsatStation)
+		{
 			//Set condition to morph
 				//Morph into Planetary F.
-			if (unit->mainOrderId == OrderId::ReaverStop) {
+			if (unit->mainOrderId == OrderId::ReaverStop)
+			{
 				//unit who is morphing
 				//id to morph into
 				//animation with the morph animation (unit--->newUnit)
@@ -454,7 +523,8 @@ namespace buildingMorph {
 				morphBuildingInto(unit, UnitId::Special_IonCannon, IscriptAnimation::Unused1, true);
 			}
 			//Morph into Orbital C.
-			else if (unit->id == OrderId::CarrierStop) {
+			else if (unit->id == OrderId::CarrierStop)
+			{
 				morphBuildingInto(unit, UnitId::TerranComsatStation, IscriptAnimation::Unused1, true);
 			}
 			//Run morph behaviour: the second value is only if you want any fixed morph time
@@ -463,20 +533,24 @@ namespace buildingMorph {
 	}
 }
 
-namespace plugins {
+namespace plugins
+{
 	//KYSXD helpers
-	CUnit* nearestTemplarMergePartner(CUnit* unit) {
+	CUnit* nearestTemplarMergePartner(CUnit* unit)
+	{
 
 		CUnit* nearest_unit = NULL;
 		u32 best_distance = MAXINT32;
 
-		for (u32 i = 0; i < *clientSelectionCount; ++i) {
+		for (u32 i = 0; i < *clientSelectionCount; ++i)
+		{
 			CUnit* nextUnit = clientSelectionGroup->unit[i];
 
 			if (nextUnit != NULL
 				&& nextUnit != unit
 				&& unit->id == (UnitId::ProtossDarkTemplar + UnitId::ProtossHighTemplar) - nextUnit->id
-				&& nextUnit->mainOrderId == OrderId::ReaverStop) {
+				&& nextUnit->mainOrderId == OrderId::ReaverStop)
+			{
 
 				u32 x_distance, y_distance;
 				x_distance =
@@ -491,7 +565,8 @@ namespace plugins {
 
 				y_distance *= y_distance;
 
-				if ((x_distance + y_distance) < best_distance) {
+				if ((x_distance + y_distance) < best_distance)
+				{
 
 					CUnit* new_nearest_unit = nextUnit;
 					nextUnit = nearest_unit;
@@ -506,7 +581,8 @@ namespace plugins {
 	}
 
 	//Same as chargeTarget_ in unit_speed.cpp
-	bool chargeTargetInRange(const CUnit* zealot) {
+	bool chargeTargetInRange(const CUnit* zealot)
+	{
 		if (!zealot->orderTarget.unit)
 			return false;
 		CUnit* chargeTarget = zealot->orderTarget.unit;
@@ -523,8 +599,10 @@ namespace plugins {
 		return false;
 	}
 
-	bool isInHarvestState(const CUnit* worker) {
-		if (!(worker->status & UnitStatus::IsGathering)) {
+	bool isInHarvestState(const CUnit* worker)
+	{
+		if (!(worker->status & UnitStatus::IsGathering))
+		{
 			return false;
 		}
 		/*if(worker->unusedTimer == 0) {
@@ -533,35 +611,46 @@ namespace plugins {
 		else return true;
 	}
 
-	bool isMineral(const CUnit* resource) {
+	bool isMineral(const CUnit* resource)
+	{
 		// this covers the entire range ResourceMineralField, ResourceMineralFieldType2, ResourceMineralFieldType3
-		if (UnitId::ResourceMineralField <= resource->id && resource->id <= UnitId::ResourceMineralFieldType3) {
+		if (UnitId::ResourceMineralField <= resource->id && resource->id <= UnitId::ResourceMineralFieldType3)
+		{
 			return true;
 		}
 		else return false;
 	}
 
-	bool isGasSupply(const CUnit* resource) {
-		if (units_dat::BaseProperty[resource->id] & UnitProperty::ResourceContainer) {
+	bool isGasSupply(const CUnit* resource)
+	{
+		if (units_dat::BaseProperty[resource->id] & UnitProperty::ResourceContainer)
+		{
 			return true;
 		}
 		else return false;
 
 	}
 
-	bool hasHarvestOrders(const CUnit* worker) {
+	bool hasHarvestOrders(const CUnit* worker)
+	{
 		if (OrderId::Harvest1 <= worker->mainOrderId &&
-			worker->mainOrderId <= OrderId::Harvest5) {
+			worker->mainOrderId <= OrderId::Harvest5)
+		{
 			return true;
 		}
 		else return false;
 	}
 
-	class HarvestTargetFinder : public scbw::UnitFinderCallbackMatchInterface {
+	class HarvestTargetFinder : public scbw::UnitFinderCallbackMatchInterface
+	{
 		CUnit* mainHarvester;
 	public:
-		void setmainHarvester(CUnit* mainHarvester) { this->mainHarvester = mainHarvester; }
-		bool match(CUnit* unit) {
+		void setmainHarvester(CUnit* mainHarvester)
+		{
+			this->mainHarvester = mainHarvester;
+		}
+		bool match(CUnit* unit)
+		{
 			if (!unit)
 				return false;
 
@@ -576,13 +665,21 @@ namespace plugins {
 	};
 	HarvestTargetFinder harvestTargetFinder;
 
-	class ContainerTargetFinder : public scbw::UnitFinderCallbackMatchInterface {
+	class ContainerTargetFinder : public scbw::UnitFinderCallbackMatchInterface
+	{
 		CUnit* mineral;
 		u32 unitStatusFlags;
 	public:
-		void setResource(CUnit* resource) { this->mineral = resource; }
-		void setStatusFlags(u32 unitStatusFlags) { this->unitStatusFlags = unitStatusFlags; }
-		bool match(CUnit* unit) {
+		void setResource(CUnit* resource)
+		{
+			this->mineral = resource;
+		}
+		void setStatusFlags(u32 unitStatusFlags)
+		{
+			this->unitStatusFlags = unitStatusFlags;
+		}
+		bool match(CUnit* unit)
+		{
 			if (!unit)
 				return false;
 
@@ -607,11 +704,15 @@ namespace plugins {
 	};
 	ContainerTargetFinder containerTargetFinder;
 
-	void exploreMap() {
-		for (int x = 0; x < mapTileSize->width; x++) {
-			for (int y = 0; y < mapTileSize->height; y++) {
+	void exploreMap()
+	{
+		for (int x = 0; x < mapTileSize->width; x++)
+		{
+			for (int y = 0; y < mapTileSize->height; y++)
+			{
 
-				if ((x + y) % 2) {
+				if ((x + y) % 2)
+				{
 					ActiveTile* currentTile = &(*activeTileArray)[(x)+mapTileSize->width * (y)];
 					currentTile->exploredFlags = 0;
 
@@ -621,20 +722,25 @@ namespace plugins {
 		}
 		//By RavenWolf:
 		//if vespene geyser or a mineral field, reveal it to all players
-		for (CUnit* unit = *firstVisibleUnit; unit; unit = unit->link.next) {
+		for (CUnit* unit = *firstVisibleUnit; unit; unit = unit->link.next)
+		{
 			if (isMineral(unit)
-				|| unit->id == UnitId::ResourceVespeneGeyser) {
+				|| unit->id == UnitId::ResourceVespeneGeyser)
+			{
 				unit->sprite->visibilityFlags = 0xFF;
 			}
 		}
 	}
 
-	void runFirstFrameBehaviour() {
+	void runFirstFrameBehaviour()
+	{
 		scbw::printText("You're now playing:\n     "
 			PLUGIN_NAME "\n     By " AUTHOR_NAME);
 		//All nexi in 50
-		for (CUnit* unit = *firstVisibleUnit; unit; unit = unit->link.next) {
-			switch (unit->id) {
+		for (CUnit* unit = *firstVisibleUnit; unit; unit = unit->link.next)
+		{
+			switch (unit->id)
+			{
 			case UnitId::ProtossNexus:
 				unit->energy = 50 << 8;
 				break;
@@ -646,11 +752,13 @@ namespace plugins {
 			}
 		}
 		//KYSXD - For non-custom games - start
-		if (*GAME_TYPE != GameType::UseMapSettings) {
+		if (*GAME_TYPE != GameType::UseMapSettings)
+		{
 			exploreMap();
 			CUnit* firstMineral[8];
 			u16 initialworkeramount = 12;
-			for (CUnit* base = *firstVisibleUnit; base; base = base->link.next) {
+			for (CUnit* base = *firstVisibleUnit; base; base = base->link.next)
+			{
 				//KYSXD - Increase initial amount of Workers - From GagMania
 				if (units_dat::BaseProperty[base->id] & UnitProperty::ResourceDepot)
 				{
@@ -663,10 +771,13 @@ namespace plugins {
 						harvestTargetFinder);
 				}
 			}
-			for (CUnit* worker = *firstVisibleUnit; worker; worker = worker->link.next) {
+			for (CUnit* worker = *firstVisibleUnit; worker; worker = worker->link.next)
+			{
 				//KYSXD Send all units to harvest on first run
-				if (units_dat::BaseProperty[worker->id] & UnitProperty::Worker) {
-					if (firstMineral[worker->playerId]) {
+				if (units_dat::BaseProperty[worker->id] & UnitProperty::Worker)
+				{
+					if (firstMineral[worker->playerId])
+					{
 						worker->orderTo(OrderId::Harvest1, firstMineral[worker->playerId]);
 					}
 				}
@@ -675,16 +786,19 @@ namespace plugins {
 		//For non-custom games - end  
 	}
 
-	void showUnitGraphicHelpers(CUnit* unit) {
+	void showUnitGraphicHelpers(CUnit* unit)
+	{
 		if (unit->id == UnitId::TerranSiegeTankSiegeMode
-			|| unit->id == UnitId::Hero_EdmundDukeSiegeMode) {
+			|| unit->id == UnitId::Hero_EdmundDukeSiegeMode)
+		{
 			graphics::drawCircle(unit->getX(), unit->getY(),
 				unit->getMaxWeaponRange(units_dat::GroundWeapon[unit->subunit->id]) + 30,
 				graphics::TEAL, graphics::ON_MAP);
 		}
 
 		if (unit->id == UnitId::ZergNydusCanal
-			&& unit->building.nydusExit != NULL) {
+			&& unit->building.nydusExit != NULL)
+		{
 			graphics::drawLine(unit->getX(), unit->getY(),
 				unit->building.nydusExit->getX(), unit->building.nydusExit->getY(),
 				graphics::ORANGE, graphics::ON_MAP);
@@ -695,12 +809,15 @@ namespace plugins {
 			&& unit->rally.pt.x
 			&& unit->rally.pt.y
 			&& unit->id != UnitId::ProtossPylon
-			&& (unit->playerId == *LOCAL_NATION_ID || scbw::isInReplay())) {
+			&& (unit->playerId == *LOCAL_NATION_ID || scbw::isInReplay()))
+		{
 			const CUnit* rallyUnit = unit->rally.unit;
 			//Rallied to self; disable rally altogether
-			if (rallyUnit != unit) {
+			if (rallyUnit != unit)
+			{
 				//Is usable rally unit
-				if (rallyUnit && rallyUnit->playerId == unit->playerId) {
+				if (rallyUnit && rallyUnit->playerId == unit->playerId)
+				{
 					graphics::drawLine(unit->getX(), unit->getY(),
 						rallyUnit->getX(), rallyUnit->getY(),
 						graphics::GREEN, graphics::ON_MAP);
@@ -708,7 +825,8 @@ namespace plugins {
 						graphics::GREEN, graphics::ON_MAP);
 				}
 				//Use map position instead
-				else if (unit->rally.pt.x != 0) {
+				else if (unit->rally.pt.x != 0)
+				{
 					graphics::drawLine(unit->getX(), unit->getY(),
 						unit->rally.pt.x, unit->rally.pt.y,
 						graphics::YELLOW, graphics::ON_MAP);
@@ -719,7 +837,8 @@ namespace plugins {
 
 			//Show worker rally point
 			const CUnit* workerRallyUnit = unit->moveTarget.unit;
-			if (workerRallyUnit) {
+			if (workerRallyUnit)
+			{
 				graphics::drawLine(unit->getX(), unit->getY(),
 					workerRallyUnit->getX(), workerRallyUnit->getY(),
 					graphics::ORANGE, graphics::ON_MAP);
@@ -732,13 +851,17 @@ namespace plugins {
 	}
 
 	//KYSXD worker no collision if harvesting - start
-	void manageWorkerCollision(CUnit* unit) {
-		if (units_dat::BaseProperty[unit->id] & UnitProperty::Worker) {
-			if (hasHarvestOrders(unit)) {
+	void manageWorkerCollision(CUnit* unit)
+	{
+		if (units_dat::BaseProperty[unit->id] & UnitProperty::Worker)
+		{
+			if (hasHarvestOrders(unit))
+			{
 				unit->unusedTimer = 2;
 				manageUnitStatusFlags(unit, UnitStatus::NoCollide, true);
 			}
-			else {
+			else
+			{
 				manageUnitStatusFlags(unit, UnitStatus::NoCollide, false);
 			}
 		}
@@ -746,26 +869,31 @@ namespace plugins {
 
 	//KYSXD PsionicTransfer cast
 	//Original from Eisetley, KYSXD modification
-	void runAdeptPsionicTransfer_cast(CUnit* adept) {
+	void runAdeptPsionicTransfer_cast(CUnit* adept)
+	{
 		if (adept->id == UnitId::Hero_Raszagal
 			&& adept->mainOrderId == OrderId::PlaceScanner
-			&& adept->orderSignal == 2) {
+			&& adept->orderSignal == 2)
+		{
 
 			adept->mainOrderId = OrderId::Nothing2;
 			CUnit* shade = scbw::createUnitAtPos(UnitId::aldaris, adept->playerId, adept->getX(), adept->getY());
-			if (shade) {
+			if (shade)
+			{
 				shade->connectedUnit = adept;
 				shade->unusedTimer = 2 * 7;
 
 				shade->status |= UnitStatus::NoCollide;
 				shade->status |= UnitStatus::IsGathering;
-				if (adept->orderTarget.unit) {
+				if (adept->orderTarget.unit)
+				{
 					shade->orderTo(OrderId::Follow, adept->orderTarget.unit);
 				}
 				else
 					shade->orderTo(OrderId::Move, adept->orderTarget.pt.x, adept->orderTarget.pt.y);
 
-				if (!scbw::isCheatEnabled(CheatFlags::TheGathering)) {
+				if (!scbw::isCheatEnabled(CheatFlags::TheGathering))
+				{
 					adept->energy = 0;
 				}
 			}
@@ -774,19 +902,25 @@ namespace plugins {
 
 	//KYSXD PsionicTransfer behavior
 	//Original from Eisetley, KYSXD modification
-	void runAdeptPsionicTransfer_behavior(CUnit* shade) {
-		if (shade->id == UnitId::aldaris) {
+	void runAdeptPsionicTransfer_behavior(CUnit* shade)
+	{
+		if (shade->id == UnitId::aldaris)
+		{
 			CUnit* adept = shade->connectedUnit;
 
-			if (!adept) {
+			if (!adept)
+			{
 				shade->orderTo(OrderId::Die);
 			}
-			else {
-				if (adept->getCurrentHpInGame() <= 0) {
+			else
+			{
+				if (adept->getCurrentHpInGame() <= 0)
+				{
 					shade->orderTo(OrderId::Die);
 				}
 
-				if (!shade->unusedTimer) {
+				if (!shade->unusedTimer)
+				{
 					//      createThingy(375, adept->getX(), adept->getY(), adept->playerId);
 					CImage* adeptSprite = adept->sprite->images.head;
 					setImageDirection(adeptSprite, shade->currentDirection1);
@@ -806,16 +940,21 @@ namespace plugins {
 	}
 
 	//KYSXD Chrono boost cast
-	void runChronoBoost_cast(CUnit* unit) {
+	void runChronoBoost_cast(CUnit* unit)
+	{
 		if (unit->id == UnitId::ProtossNexus
-			&& unit->status & UnitStatus::Completed) {
+			&& unit->status & UnitStatus::Completed)
+		{
 			if (unit->mainOrderId == OrderId::PlaceScanner
-				|| unit->orderSignal == 2) {
+				|| unit->orderSignal == 2)
+			{
 				if (unit->orderTarget.unit
-					&& scbw::isAlliedTo(unit->playerId, unit->orderTarget.unit->playerId)) {
+					&& scbw::isAlliedTo(unit->playerId, unit->orderTarget.unit->playerId))
+				{
 					unit->orderTarget.unit->stimTimer = 60; //~30 seconds
 					unit->mainOrderId = OrderId::Nothing2;
-					if (!scbw::isCheatEnabled(CheatFlags::TheGathering)) {
+					if (!scbw::isCheatEnabled(CheatFlags::TheGathering))
+					{
 						unit->energy -= 50 << 8;
 					}
 				}
@@ -826,37 +965,46 @@ namespace plugins {
 
 	//KYSXD Chrono boost behavior
 	//Should be moved to update_unit_state
-	void runChronoBoost_behavior(CUnit* unit) {
+	void runChronoBoost_behavior(CUnit* unit)
+	{
 		if (unit->status & UnitStatus::GroundedBuilding
 			&& unit->status & UnitStatus::Completed
 			&& unit->stimTimer
-			&& !(unit->isFrozen())) {
+			&& !(unit->isFrozen()))
+		{
 			//If the building is working - start
-			switch (unit->mainOrderId) {
+			switch (unit->mainOrderId)
+			{
 			case OrderId::Upgrade:
 			case OrderId::ResearchTech:
-				if (unit->building.upgradeResearchTime) {
+				if (unit->building.upgradeResearchTime)
+				{
 					unit->building.upgradeResearchTime -= std::min<u16>(unit->building.upgradeResearchTime, 4);
 				}
 				break;
 			default: break;
 			}
-			switch (unit->secondaryOrderId) {
+			switch (unit->secondaryOrderId)
+			{
 			case OrderId::BuildAddon:
 			case OrderId::Train:
-				if (unit->currentBuildUnit) {
+				if (unit->currentBuildUnit)
+				{
 					CUnit* unitInQueue = unit->currentBuildUnit;
-					if (unitInQueue->remainingBuildTime) {
+					if (unitInQueue->remainingBuildTime)
+					{
 						static s32 hpHolder;
 						static s32 maxHp;
 						maxHp = units_dat::MaxHitPoints[unitInQueue->id];
-						if (scbw::isCheatEnabled(CheatFlags::OperationCwal)) {
+						if (scbw::isCheatEnabled(CheatFlags::OperationCwal))
+						{
 							unitInQueue->remainingBuildTime -= std::min<u16>(unitInQueue->remainingBuildTime, 16);
 
 							hpHolder = unitInQueue->hitPoints + (unitInQueue->buildRepairHpGain << 4);
 							unitInQueue->hitPoints = std::min<s32>(maxHp, hpHolder);
 						}
-						else {
+						else
+						{
 							unitInQueue->remainingBuildTime--;
 
 							hpHolder = unitInQueue->hitPoints + unitInQueue->buildRepairHpGain;
@@ -869,7 +1017,8 @@ namespace plugins {
 			}
 			//Case: Warpgate
 			if (unit->id == UnitId::Special_WarpGate
-				&& unit->previousUnitType != UnitId::None) {
+				&& unit->previousUnitType != UnitId::None)
+			{
 				u32 energyHolder = unit->energy + 17; //Should be on update_unit_state.cpp?
 				unit->energy = std::min<u32>(unit->getMaxEnergy(), energyHolder);
 			}
@@ -878,15 +1027,19 @@ namespace plugins {
 	}
 
 	//KYSXD stalker's blink
-	void runStalkerBlink(CUnit* unit) {
-		if (unit->id == UnitId::Hero_FenixDragoon) {
+	void runStalkerBlink(CUnit* unit)
+	{
+		if (unit->id == UnitId::Hero_FenixDragoon)
+		{
 			if (unit->mainOrderId == OrderId::CastOpticalFlare
-				|| unit->orderSignal == 2) {
+				|| unit->orderSignal == 2)
+			{
 				u16 thisX = unit->orderTarget.pt.x;
 				u16 thisY = unit->orderTarget.pt.y;
 				scbw::moveUnit(unit, thisX, thisY);
 				unit->mainOrderId = OrderId::Nothing2;
-				if (!scbw::isCheatEnabled(CheatFlags::TheGathering)) {
+				if (!scbw::isCheatEnabled(CheatFlags::TheGathering))
+				{
 					unit->energy = 0;
 				}
 			}
@@ -894,15 +1047,20 @@ namespace plugins {
 	}
 
 	//KYSXD zealot's charge
-	void runZealotCharge(CUnit* unit) {
+	void runZealotCharge(CUnit* unit)
+	{
 		//Check max_energy.cpp and unit_speed.cpp for more info
 		if (unit->id == UnitId::ProtossZealot
-			&& unit->status & UnitStatus::SpeedUpgrade) {
+			&& unit->status & UnitStatus::SpeedUpgrade)
+		{
 			//Unit isn't in charge state
-			if (!unit->stimTimer) {
-				if (chargeTargetInRange(unit)) {
+			if (!unit->stimTimer)
+			{
+				if (chargeTargetInRange(unit))
+				{
 					//Must be: orderTo(CastStimPack)
-					if (unit->energy == unit->getMaxEnergy()) {
+					if (unit->energy == unit->getMaxEnergy())
+					{
 						unit->stimTimer = 5;
 						unit->energy = 0;
 					}
@@ -912,37 +1070,45 @@ namespace plugins {
 	}
 
 	//KYSXD Reactor behaviour start
-	void runReactorBehaviour(CUnit* unit) {
+	void runReactorBehaviour(CUnit* unit)
+	{
 		//Check unit state
 		if ((unit->id == UnitId::TerranBarracks
 			|| unit->id == UnitId::TerranFactory
 			|| unit->id == UnitId::TerranStarport)
 			&& unit->status & UnitStatus::Completed
-			&& unit->mainOrderId != OrderId::Die) {
+			&& unit->mainOrderId != OrderId::Die)
+		{
 			//Check add-on
-			if (unit->building.addon != NULL) {
+			if (unit->building.addon != NULL)
+			{
 				CUnit* reactor = unit->building.addon;
 				reactor->rally = unit->rally; //Update rally
 
 				//If the unit is trainning, do reactor behavior
-				if (unit->secondaryOrderId == OrderId::Train) {
+				if (unit->secondaryOrderId == OrderId::Train)
+				{
 					u16 changeQueue = (unit->buildQueueSlot + 1) % 5;
 					u16 tempId = unit->buildQueue[changeQueue];
 					//If the addon isn't trainning
 					if (tempId != UnitId::None
-						&& reactor->buildQueue[reactor->buildQueueSlot] == UnitId::None) {
+						&& reactor->buildQueue[reactor->buildQueueSlot] == UnitId::None)
+					{
 						reactor->buildQueue[reactor->buildQueueSlot] = tempId;
 						reactor->setSecondaryOrder(OrderId::Train);
 
 						//Update remaining queue
 						u16 queueId[5];
-						for (int i = 0; i < 5; i++) {
-							if (i != 4) {
+						for (int i = 0; i < 5; i++)
+						{
+							if (i != 4)
+							{
 								queueId[i] = unit->buildQueue[(unit->buildQueueSlot + i + 1) % 5];
 							}
 							else queueId[i] = UnitId::None;
 						}
-						for (int i = 1; i < 5; i++) {
+						for (int i = 1; i < 5; i++)
+						{
 							unit->buildQueue[(unit->buildQueueSlot + i) % 5] = queueId[i];
 						}
 					}
@@ -975,16 +1141,20 @@ namespace plugins {
 	} //KYSXD Reactor behaviour end
 
 	//KYSXD - Burrow movement start
-	void runBurrowedMovement(CUnit* unit) {
+	void runBurrowedMovement(CUnit* unit)
+	{
 		if (unit->id == UnitId::ZergZergling
-			&& unit->playerId == *LOCAL_HUMAN_ID) {
-			if (unit->mainOrderId == OrderId::Burrow) {
+			&& unit->playerId == *LOCAL_HUMAN_ID)
+		{
+			if (unit->mainOrderId == OrderId::Burrow)
+			{
 				unit->_unused_0x106 = (u8)true;
 			}
 
 			if (unit->_unused_0x106
 				&& unit->status & UnitStatus::Burrowed
-				&& unit->status & UnitStatus::CanNotReceiveOrders) {
+				&& unit->status & UnitStatus::CanNotReceiveOrders)
+			{
 
 				unit->status &= ~UnitStatus::Burrowed;
 				unit->status &= ~UnitStatus::CanNotReceiveOrders;
@@ -998,25 +1168,30 @@ namespace plugins {
 
 			if (unit->_unused_0x106
 				&& unit->mainOrderId != OrderId::Unburrow
-				&& unit->sprite->mainGraphic->animation != IscriptAnimation::Burrow) {
+				&& unit->sprite->mainGraphic->animation != IscriptAnimation::Burrow)
+			{
 				unit->playIscriptAnim(IscriptAnimation::Burrow);
 			}
 
 			if (unit->_unused_0x106
 				&& OrderId::Attack1 <= unit->mainOrderId
-				&& unit->mainOrderId <= OrderId::AttackMove) {
-				if (unit->orderTarget.unit) {
+				&& unit->mainOrderId <= OrderId::AttackMove)
+			{
+				if (unit->orderTarget.unit)
+				{
 					unit->orderTo(OrderId::Move, unit->orderTarget.unit);
 				}
 				else if (unit->orderTarget.pt.x
-					&& unit->orderTarget.pt.y) {
+					&& unit->orderTarget.pt.y)
+				{
 					unit->orderTo(OrderId::Move, unit->orderTarget.pt.x, unit->orderTarget.pt.y);
 				}
 				else unit->orderTo(OrderId::Nothing2);
 			}
 
 			if (unit->mainOrderId == OrderId::ReaverStop
-				&& unit->_unused_0x106) {
+				&& unit->_unused_0x106)
+			{
 				unit->_unused_0x106 = (u8)false;
 
 				unit->status &= ~UnitStatus::IsGathering;
@@ -1030,7 +1205,8 @@ namespace plugins {
 
 
 
-	void showWorkerCount(CUnit* unit) {
+	void showWorkerCount(CUnit* unit)
+	{
 		u32 baseProp = units_dat::BaseProperty[unit->id];
 		int gasWorkers = 0;
 		//
@@ -1041,25 +1217,29 @@ namespace plugins {
 			static scbw::UnitFinder resourcefinder;
 			resourcefinder.search(unit->getX() - 256, unit->getY() - 256, unit->getX() + 256, unit->getY() + 256);
 
-			for (int k = 0; k < resourcefinder.getUnitCount(); ++k) {
+			for (int k = 0; k < resourcefinder.getUnitCount(); ++k)
+			{
 				CUnit* thisUnit = resourcefinder.getUnit(k);
 				if (thisUnit->playerId == *LOCAL_NATION_ID
 					&& (units_dat::BaseProperty[thisUnit->id] & UnitProperty::Worker)
 					&& isInHarvestState(thisUnit)
 					&& thisUnit->worker.targetResource.unit != NULL
-					&& thisUnit->worker.targetResource.unit == unit) {
+					&& thisUnit->worker.targetResource.unit == unit)
+				{
 					gasWorkers++;
 				}
 
 			}
 
-			for (CUnit* invisibleunit = *firstHiddenUnit; invisibleunit; invisibleunit = invisibleunit->link.next) {
+			for (CUnit* invisibleunit = *firstHiddenUnit; invisibleunit; invisibleunit = invisibleunit->link.next)
+			{
 				//btech - Worker Count both visible and invisible (updated from KYSXD code)
 				//show workers for visible and invisible
 				if (invisibleunit->playerId == *LOCAL_NATION_ID
 					&& units_dat::BaseProperty[invisibleunit->id] & UnitProperty::Worker
 					&& invisibleunit->worker.targetResource.unit != NULL
-					&& invisibleunit->worker.targetResource.unit == unit) {
+					&& invisibleunit->worker.targetResource.unit == unit)
+				{
 					gasWorkers++;
 				}
 			}
@@ -1068,7 +1248,8 @@ namespace plugins {
 		//KYSXD unit worker count start  
 		if (unit->playerId == *LOCAL_NATION_ID
 			&& unit->status & UnitStatus::Completed //ResourceContainer is items like Refinery
-			&& (units_dat::BaseProperty[unit->id] & UnitProperty::ResourceDepot || units_dat::BaseProperty[unit->id] & UnitProperty::ResourceContainer)) {
+			&& (units_dat::BaseProperty[unit->id] & UnitProperty::ResourceDepot || units_dat::BaseProperty[unit->id] & UnitProperty::ResourceContainer))
+		{
 
 			int nearmineral = 0;
 			int gasSupply = 0;
@@ -1078,9 +1259,11 @@ namespace plugins {
 			//KYSXD count the nearest minerals
 			static scbw::UnitFinder resourcefinder;
 			resourcefinder.search(unit->getX() - 300, unit->getY() - 300, unit->getX() + 300, unit->getY() + 300);
-			for (int k = 0; k < resourcefinder.getUnitCount(); ++k) {
+			for (int k = 0; k < resourcefinder.getUnitCount(); ++k)
+			{
 				CUnit* currentResource = resourcefinder.getUnit(k);
-				if (isMineral(currentResource)) {
+				if (isMineral(currentResource))
+				{
 					containerTargetFinder.setResource(currentResource);
 					containerTargetFinder.setStatusFlags(UnitStatus::GroundedBuilding);
 					nearestContainer = scbw::UnitFinder::getNearestTarget(
@@ -1089,18 +1272,21 @@ namespace plugins {
 						currentResource,
 						containerTargetFinder);
 					if (nearestContainer != NULL
-						&& nearestContainer == unit) {
+						&& nearestContainer == unit)
+					{
 						nearmineral++;
 					}
 				}
 
 				//start gas supply
-				if (isGasSupply(currentResource)) {
+				if (isGasSupply(currentResource))
+				{
 					gasSupply = 3; //btech: capped at 3 for now. This could be improved by detecting distance and dividing that distance by gather time 
 				}
 
 
-				for (int k = 0; k < resourcefinder.getUnitCount(); ++k) {
+				for (int k = 0; k < resourcefinder.getUnitCount(); ++k)
+				{
 					CUnit* thisUnit = resourcefinder.getUnit(k);
 					if (thisUnit->playerId == *LOCAL_NATION_ID
 						&& (units_dat::BaseProperty[thisUnit->id] & UnitProperty::Worker)
@@ -1109,20 +1295,23 @@ namespace plugins {
 						&& thisUnit->worker.targetResource.unit == currentResource
 						&& currentResource->id != UnitId::TerranRefinery
 						&& currentResource->id != UnitId::ProtossAssimilator
-						&& currentResource->id != UnitId::ZergExtractor) {
+						&& currentResource->id != UnitId::ZergExtractor)
+					{
 						nearworkers++;
 					}
 				}
 				//end gas supply
 			}
 			//KYSXD count the nearest Workers
-			if (nearmineral > 0 && units_dat::BaseProperty[unit->id] & UnitProperty::ResourceDepot) {
+			if (nearmineral > 0 && units_dat::BaseProperty[unit->id] & UnitProperty::ResourceDepot)
+			{
 				static char unitcount[64];
 				sprintf_s(unitcount, "%d/%d", nearworkers, nearmineral * 2); //* 2 since 2 units can use a single mineral at a time
 				graphics::drawText(unit->getX() - 12, unit->getY() - 72, unitcount, graphics::FONT_LARGE, graphics::ON_MAP);
 
 			}
-			if (gasSupply > 0 && units_dat::BaseProperty[unit->id] & UnitProperty::ResourceContainer) {
+			if (gasSupply > 0 && units_dat::BaseProperty[unit->id] & UnitProperty::ResourceContainer)
+			{
 				static char unitcount[64];
 				sprintf_s(unitcount, "%d/%d", gasWorkers, gasSupply); //* 2 since 2 units can use a single mineral at a time
 				graphics::drawText(unit->getX() - 12, unit->getY() - 72, unitcount, graphics::FONT_LARGE, graphics::ON_MAP);
@@ -1132,47 +1321,55 @@ namespace plugins {
 
 	} //namespace plugins
 
-	void showProgressBar(CUnit* unit, u16 totalBuildTime) {
-
+	void showProgressBar(CUnit* unit, u16 remainingBuildTime, u16 totalBuildTime)
+	{
 		totalBuildTime = totalBuildTime == 0 ? totalBuildTime = units_dat::TimeCost[unit->id] : totalBuildTime;
 
-		if (unit->remainingBuildTime > totalBuildTime) {
+		if (remainingBuildTime > totalBuildTime)
 			return;
-		}
+		if (totalBuildTime == 0)
+			return; //prevent divide by zero
 
 		//this condition happens when a zerg egg morphs into something, multiple progress bars are built which shouldn't happen
 		if (unit->status & UnitStatus::CanTurnAroundToAttack
 			&& unit->status & UnitStatus::IsBuilding
-			&& unit->status & UnitStatus::IgnoreTileCollision) {
+			&& unit->status & UnitStatus::IgnoreTileCollision)
+		{
 			return;
 		}
 
 		graphics::drawFilledBox(unit->getX() - 59, unit->getY() - 51, unit->getX() + 59, unit->getY() - 53, graphics::GREY, graphics::ON_MAP);
 		graphics::drawBox(unit->getX() + 60, unit->getY() - 50, unit->getX() - 60, unit->getY() - 54, graphics::BLUE, graphics::ON_MAP);
-		u16 buildTimeSoFar = totalBuildTime - unit->remainingBuildTime;
+		u16 buildTimeSoFar = totalBuildTime - remainingBuildTime;
 		int pixelsBuilt = ((buildTimeSoFar * 118) / totalBuildTime) - 59;
 		graphics::drawFilledBox(unit->getX() - 59, unit->getY() - 51, unit->getX() + pixelsBuilt, unit->getY() - 53, graphics::GREEN, graphics::ON_MAP);
 	}
 }
 
-namespace warpgateMechanic {
-	void manageWarpgateFlags(CUnit* warpgate) {
+namespace warpgateMechanic
+{
+	void manageWarpgateFlags(CUnit* warpgate)
+	{
 		if (warpgate->getMaxEnergy()
-			&& warpgate->getMaxEnergy() == warpgate->energy) {
+			&& warpgate->getMaxEnergy() == warpgate->energy)
+		{
 			warpgate->previousUnitType = UnitId::None;
 			warpgate->building.addon = NULL;
 		}
 	}
 
-	void cleanWarpgate(CUnit* warpgate) {
+	void cleanWarpgate(CUnit* warpgate)
+	{
 		warpgate->buildQueue[warpgate->buildQueueSlot] = UnitId::None;
 		warpgate->mainOrderId = OrderId::Nothing2;
 		warpgate->secondaryOrderId = OrderId::Nothing2;
 		warpgate->building.addon = warpgate;
 	}
 
-	void setWarpUnit(CUnit* warpUnit) {
-		if (warpUnit) {
+	void setWarpUnit(CUnit* warpUnit)
+	{
+		if (warpUnit)
+		{
 
 			u16 warpSeconds = 5;
 			u16 warpTime = warpSeconds * 15;
@@ -1199,8 +1396,10 @@ namespace warpgateMechanic {
 		}
 	}
 
-	void runWarpgatePlacing(CUnit* unit) {
-		if (unit->buildQueue[unit->buildQueueSlot] != UnitId::None) {
+	void runWarpgatePlacing(CUnit* unit)
+	{
+		if (unit->buildQueue[unit->buildQueueSlot] != UnitId::None)
+		{
 
 			u16 warpUnitId = unit->buildQueue[unit->buildQueueSlot];
 			unit->previousUnitType = warpUnitId;
@@ -1216,39 +1415,47 @@ namespace warpgateMechanic {
 		}
 	}
 
-	void runWarpgate(CUnit* warpgate) {
+	void runWarpgate(CUnit* warpgate)
+	{
 		buildingMorph::runBuildingMorph(warpgate);
 
-		if (warpgate->id == UnitId::Special_WarpGate) {
+		if (warpgate->id == UnitId::Special_WarpGate)
+		{
 			runWarpgatePlacing(warpgate);
 			manageWarpgateFlags(warpgate);
 		}
 	}
 } //namespace warpagteMechanic
 
-namespace buildingPreview {
+namespace buildingPreview
+{
 	u16 previewParent[UNIT_ARRAY_LENGTH + 1];
 	u8 previewPlayerId[UNIT_ARRAY_LENGTH + 1];
 
-	void saveUnitAsParent(CUnit* parent, CUnit* unit) {
+	void saveUnitAsParent(CUnit* parent, CUnit* unit)
+	{
 		previewParent[unit->getIndex()] = parent->getIndex();
 		previewPlayerId[unit->getIndex()] = parent->playerId;
 	}
 
-	CUnit* getPrevParent(CUnit* preview) {
+	CUnit* getPrevParent(CUnit* preview)
+	{
 		return CUnit::getFromIndex(previewParent[preview->getIndex()]);
 	}
 
-	u8 getPrevPlayerId(CUnit* preview) {
+	u8 getPrevPlayerId(CUnit* preview)
+	{
 		return previewPlayerId[preview->getIndex()];
 	}
 
-	void cleanPrevPlayerId(CUnit* preview) {
+	void cleanPrevPlayerId(CUnit* preview)
+	{
 		previewPlayerId[preview->getIndex()] = NULL;
 	}
 
 	const u32 Func_ConvertToHallucination = 0x004F6180;
-	void convertToHallucination(CUnit* unit) {
+	void convertToHallucination(CUnit* unit)
+	{
 
 		__asm {
 			PUSHAD
@@ -1260,7 +1467,8 @@ namespace buildingPreview {
 	}
 
 	const u32 Func_UseHallucinationDrawfunc = 0x00497DC0;;
-	void useHallucinationDrawfunc(CSprite* sprite, u32 palette = 0) {
+	void useHallucinationDrawfunc(CSprite* sprite, u32 palette = 0)
+	{
 
 		__asm {
 			PUSHAD
@@ -1272,8 +1480,10 @@ namespace buildingPreview {
 
 	}
 
-	bool IsBuildOrder(u16 orderId) {
-		switch (orderId) {
+	bool IsBuildOrder(u16 orderId)
+	{
+		switch (orderId)
+		{
 		case OrderId::BuildTerran:
 		case OrderId::BuildProtoss1:
 			return true;
@@ -1282,7 +1492,8 @@ namespace buildingPreview {
 		}
 	}
 
-	bool isValidPreview(CUnit* preview) {
+	bool isValidPreview(CUnit* preview)
+	{
 		CUnit* parent = CUnit::getFromIndex(previewParent[preview->getIndex()]);
 		if (preview->status & UnitStatus::IsHallucination
 			&& preview->playerId == 11
@@ -1290,14 +1501,17 @@ namespace buildingPreview {
 				|| !IsBuildOrder(parent->mainOrderId)
 				|| parent->orderTarget.unit != preview
 				|| parent->orderTarget.pt.x != preview->getX()
-				|| parent->orderTarget.pt.y != preview->getY())) {
+				|| parent->orderTarget.pt.y != preview->getY()))
+		{
 			return false;
 		}
 		return true;
 	}
 
-	void removePreview(CUnit* preview) {
-		if (!isValidPreview(preview)) {
+	void removePreview(CUnit* preview)
+	{
+		if (!isValidPreview(preview))
+		{
 
 			preview->sprite->visibilityFlags = 0;
 			ActiveTile* tile = &scbw::getActiveTileAt(preview->getX(), preview->getY());
@@ -1309,30 +1523,36 @@ namespace buildingPreview {
 		}
 	}
 
-	void freeOccupiedTiles(CUnit* building) {
+	void freeOccupiedTiles(CUnit* building)
+	{
 		Point16 const dimensions = units_dat::BuildingDimensions[building->id];;
 		u16 init_x = building->getX();
 		init_x -= std::min(init_x, (u16)(dimensions.x / 2));
 		u16 init_y = building->getY();
 		init_y -= std::min(init_y, (u16)(dimensions.y / 2));
 
-		for (int tile_x = 0; tile_x < dimensions.x; tile_x++) {
-			for (int tile_y = 0; tile_y < dimensions.y; tile_y++) {
+		for (int tile_x = 0; tile_x < dimensions.x; tile_x++)
+		{
+			for (int tile_y = 0; tile_y < dimensions.y; tile_y++)
+			{
 				ActiveTile* tile = &scbw::getActiveTileAt(init_x + tile_x, init_y + tile_y);
 				if (tile) tile->currentlyOccupied &= ~1;
 			}
 		}
 	}
 
-	bool placementIsFree(u16 unitId, u16 pos_x, u16 pos_y) {
+	bool placementIsFree(u16 unitId, u16 pos_x, u16 pos_y)
+	{
 		Point16 const dimensions = units_dat::BuildingDimensions[unitId];;
 		u16 init_x = pos_x;
 		init_x -= std::min(init_x, (u16)(dimensions.x / 2));
 		u16 init_y = pos_y;
 		init_y -= std::min(init_y, (u16)(dimensions.y / 2));
 
-		for (int tile_x = 0; tile_x < dimensions.x; tile_x += 32) {
-			for (int tile_y = 0; tile_y < dimensions.y; tile_y += 32) {
+		for (int tile_x = 0; tile_x < dimensions.x; tile_x += 32)
+		{
+			for (int tile_y = 0; tile_y < dimensions.y; tile_y += 32)
+			{
 				ActiveTile* tile = &scbw::getActiveTileAt(init_x + tile_x, init_y + tile_y);
 				if (tile && tile->currentlyOccupied == 1) return false;
 			}
@@ -1340,24 +1560,28 @@ namespace buildingPreview {
 		return true;
 	}
 
-	void setPreview(CUnit* preview) {
+	void setPreview(CUnit* preview)
+	{
 		preview->userActionFlags |= 0x4;
 
 		convertToHallucination(preview);
 		manageUnitStatusFlags(preview, UnitStatus::NoCollide, true);
 		manageUnitStatusFlags(preview, UnitStatus::Invincible, true);
 
-		if (preview->sprite) {
+		if (preview->sprite)
+		{
 			useHallucinationDrawfunc(preview->sprite);
 			preview->sprite->visibilityFlags = (1 << getPrevPlayerId(preview));
 
-			if (preview->sprite->mainGraphic) {
+			if (preview->sprite->mainGraphic)
+			{
 				preview->sprite->mainGraphic->flags &= ~CImage_Flags::Clickable;
 			}
 		}
 	}
 
-	CUnit* placePreviewAt(u16 unitId, u16 pos_x, u16 pos_y) {
+	CUnit* placePreviewAt(u16 unitId, u16 pos_x, u16 pos_y)
+	{
 
 		bool freeTiles = placementIsFree(unitId, pos_x, pos_y);
 		CUnit* preview = scbw::createUnitAtPos(unitId,
@@ -1369,17 +1593,20 @@ namespace buildingPreview {
 		return preview;
 	}
 
-	void createPreview(CUnit* unit) {
+	void createPreview(CUnit* unit)
+	{
 		u16 creationId = unit->buildQueue[unit->buildQueueSlot];
 		if (creationId != UnitId::None
 			&& unit->orderTarget.unit == NULL
-			&& IsBuildOrder(unit->mainOrderId)) {
+			&& IsBuildOrder(unit->mainOrderId))
+		{
 
 			CUnit* preview = placePreviewAt(creationId,
 				unit->orderTarget.pt.x,
 				unit->orderTarget.pt.y);
 
-			if (preview) {
+			if (preview)
+			{
 				unit->orderTarget.unit = preview;
 				saveUnitAsParent(unit, preview);
 
@@ -1388,15 +1615,19 @@ namespace buildingPreview {
 		}
 	}
 
-	void manageBuildingPreview(CUnit* unit) {
+	void manageBuildingPreview(CUnit* unit)
+	{
 		removePreview(unit);
 		createPreview(unit);
 	}
 }
 
-namespace smartCasting {
-	bool isOrderValidForSmartcasting(u16 orderId) {
-		switch (orderId) {
+namespace smartCasting
+{
+	bool isOrderValidForSmartcasting(u16 orderId)
+	{
+		switch (orderId)
+		{
 		case OrderId::WarpingArchon:
 		case OrderId::FireYamatoGun1:
 		case OrderId::MagnaPulse:
@@ -1458,7 +1689,8 @@ namespace smartCasting {
 	}
 
 	//Get a COrder pointer with a custom order
-	COrder* createOrder(u16 orderId = OrderId::Nothing2, u16 unitId = 0, CUnit* target = NULL, u16 posX = 0, u16 posY = 0) {
+	COrder* createOrder(u16 orderId = OrderId::Nothing2, u16 unitId = 0, CUnit* target = NULL, u16 posX = 0, u16 posY = 0)
+	{
 		static COrder thisOrder;
 		thisOrder.prev = NULL;
 		thisOrder.next = NULL;
@@ -1472,7 +1704,8 @@ namespace smartCasting {
 	}
 
 	//Get a COrder pointer with the current order
-	inline COrder* getCurrentOrder(CUnit* unit) {
+	inline COrder* getCurrentOrder(CUnit* unit)
+	{
 		return createOrder((u16)unit->mainOrderId,
 			unit->buildQueue[unit->buildQueueSlot],
 			unit->orderTarget.unit,
@@ -1481,7 +1714,8 @@ namespace smartCasting {
 	}
 
 	//Get a COrder pointer with the last order
-	inline COrder* getLastOrder(CUnit* unit) {
+	inline COrder* getLastOrder(CUnit* unit)
+	{
 		int index = unit->getIndex();
 		COrder* unitLastOrder = &lastOrderArray[index];
 		return createOrder(unitLastOrder->orderId,
@@ -1492,8 +1726,10 @@ namespace smartCasting {
 	}
 
 	//Stores all variables of COrder in the unit using unused members of CUnit
-	inline void saveAsLastOrder(CUnit* unit, COrder* lastOrder = NULL) {
-		if (lastOrder) {
+	inline void saveAsLastOrder(CUnit* unit, COrder* lastOrder = NULL)
+	{
+		if (lastOrder)
+		{
 			int index = unit->getIndex();
 			COrder* unitLastOrder = &lastOrderArray[index];
 
@@ -1501,14 +1737,17 @@ namespace smartCasting {
 			unitLastOrder->unitId = lastOrder->unitId;
 			unitLastOrder->target = lastOrder->target;
 		}
-		else {
+		else
+		{
 			saveAsLastOrder(unit, getCurrentOrder(unit));
 		}
 	}
 
 	//Stores all variables of COrder in the variables of the current order
-	inline void saveAsMainOrder(CUnit* unit, COrder* mainOrder) {
-		if (mainOrder) {
+	inline void saveAsMainOrder(CUnit* unit, COrder* mainOrder)
+	{
+		if (mainOrder)
+		{
 			unit->mainOrderId = (u8)mainOrder->orderId;
 			unit->buildQueue[unit->buildQueueSlot] = mainOrder->unitId;
 			unit->orderTarget.unit = mainOrder->target.unit;
@@ -1521,14 +1760,18 @@ namespace smartCasting {
 	//1) resets the variables of the current order
 	//2) issues the COrder newOrder
 	//3) stores the newOrder's variables in the unit's last order variables
-	inline void setOrderInUnit(CUnit* unit, COrder* newOrder = NULL) {
-		if (newOrder) {
+	inline void setOrderInUnit(CUnit* unit, COrder* newOrder = NULL)
+	{
+		if (newOrder)
+		{
 			//If the order is the same, just change the current targets
-			if (newOrder->orderId == unit->mainOrderId) {
+			if (newOrder->orderId == unit->mainOrderId)
+			{
 				saveAsMainOrder(unit, newOrder);
 			}
 			//If the order is the different, clean and queue...
-			else {
+			else
+			{
 				saveAsMainOrder(unit, createOrder());
 				unit->order((u8)newOrder->orderId, newOrder->target.pt.x, newOrder->target.pt.y, newOrder->target.unit, newOrder->unitId, true);
 			}
@@ -1536,7 +1779,8 @@ namespace smartCasting {
 			saveAsLastOrder(unit, newOrder);
 		}
 		//If no order... do the same with a Nothing2 order
-		else {
+		else
+		{
 			setOrderInUnit(unit, createOrder());
 		}
 	}
@@ -1545,26 +1789,32 @@ namespace smartCasting {
 	//1) If the user has interacted with the unit
 	//2) if the unit's mainOrderId is the same as the asked orderId
 	//3) If the last order is different from the asked orderId or is allowed to overrun orders
-	inline bool isCasterValidForOrder(CUnit* unit, u8 orderId) {
+	inline bool isCasterValidForOrder(CUnit* unit, u8 orderId)
+	{
 		if (unit
 			&& unit->userActionFlags == 2
-			&& unit->mainOrderId == orderId) {
+			&& unit->mainOrderId == orderId)
+		{
 			return true;
 		}
 		return false;
 	}
 
 	//Checks if the new order is different from the last
-	inline bool isOverruningLastOrder(CUnit* unit, u8 orderId) {
-		if (getLastOrder(unit)->orderId == orderId) {
+	inline bool isOverruningLastOrder(CUnit* unit, u8 orderId)
+	{
+		if (getLastOrder(unit)->orderId == orderId)
+		{
 			return true;
 		}
 		return false;
 	}
 
 	//Checks of the orderId requires two units (warp archon)
-	inline bool isCouplesOrder(u8 orderId) {
-		switch (orderId) {
+	inline bool isCouplesOrder(u8 orderId)
+	{
+		switch (orderId)
+		{
 		case OrderId::WarpingArchon:
 		case OrderId::WarpingDarkArchon:
 			return true;
@@ -1576,43 +1826,53 @@ namespace smartCasting {
 	}
 
 	//Checks if two units are partners in a 2-units order
-	inline bool isPartnerInOrder(CUnit* unit1, CUnit* unit2, u8 orderId) {
+	inline bool isPartnerInOrder(CUnit* unit1, CUnit* unit2, u8 orderId)
+	{
 		if (unit1 && unit2 && isCouplesOrder(orderId)
 			&& unit1->orderTarget.unit == unit2
-			&& unit2->orderTarget.unit == unit1) {
+			&& unit2->orderTarget.unit == unit1)
+		{
 			return true;
 		}
 		else return false;
 	}
 
-	void setCasters() {
-		for (CUnit* caster = *firstVisibleUnit; caster; caster = caster->link.next) {
-			if (isOrderValidForSmartcasting(caster->mainOrderId)) {
+	void setCasters()
+	{
+		for (CUnit* caster = *firstVisibleUnit; caster; caster = caster->link.next)
+		{
+			if (isOrderValidForSmartcasting(caster->mainOrderId))
+			{
 				addToOrderList(caster);
 			}
 		}
 	}
 
 	//Returns the best caster running orderId for player playerId
-	CUnit** getBestCasters(u8 orderId) {
+	CUnit** getBestCasters(u8 orderId)
+	{
 		static CUnit* bestCasterClean[8];
 		static CUnit* bestCasterOverrun[8];
 
 		static CUnit* bestCasterArray[8];
 
-		for (int i = 0; i < 8; i++) {
+		for (int i = 0; i < 8; i++)
+		{
 			bestCasterClean[i] = NULL;
 			bestCasterOverrun[i] = NULL;
 
-			for (CUnit* caster = firstCaster[orderId][i]; caster; caster = custom_unit_array[caster->getIndex()]) {
-				if (isCasterValidForOrder(caster, orderId)) {
+			for (CUnit* caster = firstCaster[orderId][i]; caster; caster = custom_unit_array[caster->getIndex()])
+			{
+				if (isCasterValidForOrder(caster, orderId))
+				{
 
 					u8 p_id = caster->playerId;
 
 					//If is clean order (different than the last one), we have a winner
 					if (!isOverruningLastOrder(caster, orderId)
 						&& (!bestCasterClean[p_id]
-							|| bestCasterClean[p_id]->energy < caster->energy)) {
+							|| bestCasterClean[p_id]->energy < caster->energy))
+					{
 						bestCasterClean[p_id] = caster;
 					}
 
@@ -1620,7 +1880,8 @@ namespace smartCasting {
 					//Store in case we don't have a winner (clean caster)
 					//We're going to need this if we can't find a new caster
 					if (!bestCasterOverrun[p_id]
-						|| bestCasterOverrun[p_id]->energy < caster->energy) {
+						|| bestCasterOverrun[p_id]->energy < caster->energy)
+					{
 						bestCasterOverrun[p_id] = caster;
 					}
 
@@ -1630,7 +1891,8 @@ namespace smartCasting {
 
 
 		//For each player, store the caster
-		for (int i = 0; i < 8; i++) {
+		for (int i = 0; i < 8; i++)
+		{
 			bestCasterArray[i] = (bestCasterClean[i] == NULL ? bestCasterOverrun[i] : bestCasterClean[i]);
 		}
 
@@ -1639,8 +1901,10 @@ namespace smartCasting {
 
 	//Issued the last order to unit
 	//If the last order was completed, orders to idle
-	inline void tryLastOrder(CUnit* unit) {
-		if (unit->orderSignal == 2) {
+	inline void tryLastOrder(CUnit* unit)
+	{
+		if (unit->orderSignal == 2)
+		{
 			setOrderInUnit(unit);
 			unit->orderSignal = 0;
 		}
@@ -1649,7 +1913,8 @@ namespace smartCasting {
 	}
 
 	//Smartcast behaviour
-	inline void smartCastOrder(u8 orderId) {
+	inline void smartCastOrder(u8 orderId)
+	{
 		CUnit** bestCasterArray = getBestCasters(orderId);
 		long int target_x[8];
 		long int target_y[8];
@@ -1657,8 +1922,10 @@ namespace smartCasting {
 
 		//Set if we can find at leat one unit new-casting the order
 		bool atLeastOneCaster = false;
-		for (int i = 0; i < 8; i++) {
-			if (bestCasterArray[i]) {
+		for (int i = 0; i < 8; i++)
+		{
+			if (bestCasterArray[i])
+			{
 				bestCasterArray[i]->userActionFlags = 0;
 				atLeastOneCaster = true;
 			}
@@ -1667,14 +1934,17 @@ namespace smartCasting {
 			totalCasters[i] = 0;
 		}
 
-		if (atLeastOneCaster) {
+		if (atLeastOneCaster)
+		{
 			//For each player
 			for (int i = 0; i < PLAYABLE_PLAYER_COUNT; i++)
 			{
 				//Order other units to continue with the lasts orders
-				for (CUnit* caster = firstCaster[orderId][i]; caster; caster = custom_unit_array[caster->getIndex()]) {
+				for (CUnit* caster = firstCaster[orderId][i]; caster; caster = custom_unit_array[caster->getIndex()])
+				{
 					if (caster->userActionFlags == 2
-						&& caster->mainOrderId == orderId) {
+						&& caster->mainOrderId == orderId)
+					{
 
 						target_x[caster->playerId] += caster->orderTarget.pt.x;
 						target_y[caster->playerId] += caster->orderTarget.pt.y;
@@ -1682,7 +1952,8 @@ namespace smartCasting {
 
 						//Checks if the unit is the partner of the current best
 						//This is going to help (eventually) with smart casting archon warp and dark archon meld
-						if (!isPartnerInOrder(bestCasterArray[caster->playerId], caster, orderId)) {
+						if (!isPartnerInOrder(bestCasterArray[caster->playerId], caster, orderId))
+						{
 							tryLastOrder(caster);
 						}
 
@@ -1695,10 +1966,12 @@ namespace smartCasting {
 
 			//Fix the target point for ground spells
 			//Ground spells like psi storm, ensnare, lockdown
-			for (int j = 0; j < 8; j++) {
+			for (int j = 0; j < 8; j++)
+			{
 				if (bestCasterArray[j]
 					&& !bestCasterArray[j]->orderTarget.unit
-					&& totalCasters[j]) {
+					&& totalCasters[j])
+				{
 					target_x[j] /= totalCasters[j];
 					target_y[j] /= totalCasters[j];
 
@@ -1710,8 +1983,10 @@ namespace smartCasting {
 	}
 
 	//Sets flags and saves last order
-	inline void prepareUnitsForNextFrame() {
-		for (CUnit* unit = *firstVisibleUnit; unit; unit = unit->link.next) {
+	inline void prepareUnitsForNextFrame()
+	{
+		for (CUnit* unit = *firstVisibleUnit; unit; unit = unit->link.next)
+		{
 			//Stores the last order for smartCast
 			saveAsLastOrder(unit);
 		}
@@ -1720,7 +1995,8 @@ namespace smartCasting {
 	//Runs smartcast for each order and prepares for next frame
 	//Archon's orders doesn't work now:
 	//Archon Merge and Dark Archon Meld buttons doesn't set userActionFlags on the unit
-	inline void runSmartCast() {
+	inline void runSmartCast()
+	{
 		setCasters();
 		for (int i = 0; i < ORDER_TYPE_COUNT; i++)
 		{
